@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)file:///C:/Users/USER/Documents/INDEKS%208.html -->
+<html lang="id"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Sky Library</title>
+    <link href="./Aurora Sky Library_files/css2" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #818cf8;
+            --secondary: #c084fc;
+            --aurora-teal: rgba(45, 212, 191, 0.3);
+            --aurora-purple: rgba(139, 92, 246, 0.3);
+            --bg-space: #0f172a;
+            --text-main: #f1f5f9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            background: var(--bg-space);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND ANIMASI --- */
+        #universe {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; background: radial-gradient(ellipse at bottom, #1e293b 0%, #020617 100%);
+            overflow: hidden;
+        }
+
+        .aurora-layer {
+            position: absolute; width: 200%; height: 100%;
+            top: -10%; left: -50%;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0%,
+                var(--aurora-teal) 15%,
+                transparent 30%,
+                var(--aurora-purple) 45%,
+                transparent 60%
+            );
+            filter: blur(100px);
+            opacity: 0.5;
+            animation: auroraFlow 20s infinite linear;
+        }
+
+        @keyframes auroraFlow {
+            from { transform: translateX(-20%) skewX(-10deg); }
+            to { transform: translateX(0%) skewX(10deg); }
+        }
+
+        .shooting-star {
+            position: absolute; top: -10px;
+            width: 2px; height: 100px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), #fff);
+            opacity: 0; animation: shoot 5s infinite;
+        }
+
+        @keyframes shoot {
+            0% { transform: translateY(0) translateX(0) rotate(-45deg); opacity: 0; }
+            10% { opacity: 1; }
+            30% { transform: translateY(800px) translateX(800px) rotate(-45deg); opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        /* --- LANDING PAGE --- */
+        #landingPage {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(15px); transition: 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        #landingPage.hidden { transform: translateY(-100%); opacity: 0; }
+
+        .welcome-card {
+            display: flex; align-items: center; gap: 40px;
+            max-width: 900px; padding: 40px;
+        }
+
+        .profile-frame {
+            position: relative;
+            animation: floatProfile 6s infinite ease-in-out;
+            flex-shrink: 0;
+        }
+
+        @keyframes floatProfile {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1.5deg); }
+        }
+
+        .profile-frame img {
+            width: 260px;
+            height: 360px;
+            object-fit: cover;
+            border-radius: 40px 15px; 
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 40px rgba(129, 140, 248, 0.3);
+        }
+
+        .welcome-info h1 {
+            font-family: 'Playfair Display', serif; font-size: 3.5rem;
+            line-height: 1.1; margin-bottom: 20px;
+            background: linear-gradient(to bottom right, #fff, var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* --- MAIN SYSTEM --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 80px 20px; display: none; }
+        .container.active { display: block; animation: slideUp 1s cubic-bezier(0.2, 1, 0.3, 1); }
+
+        .glass-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 14px 28px; border-radius: 12px;
+            cursor: pointer; font-weight: 700; transition: 0.4s;
+            box-shadow: 0 10px 20px rgba(129, 140, 248, 0.25);
+        }
+        .glass-btn:hover { transform: scale(1.05) translateY(-2px); }
+
+        /* --- BOOK CARDS --- */
+        .book-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 30px; margin-top: 40px;
+        }
+
+        .book-card {
+            background: rgba(255, 255, 255, 0.03); border-radius: 24px; padding: 20px;
+            border: 1px solid rgba(255,255,255,0.08); transition: 0.5s;
+            backdrop-filter: blur(10px); text-align: center;
+        }
+        .book-card:hover { transform: translateY(-15px); border-color: var(--primary); }
+
+        /* --- UPDATE: Tampilan Cover --- */
+        .auto-cover {
+            width: 100%; height: 280px; border-radius: 16px;
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 20px; margin-bottom: 15px; color: white;
+            position: relative; overflow: hidden;
+            background-size: cover !important;
+            background-position: center !important;
+            transition: 0.3s;
+        }
+
+        .cover-overlay {
+            position: absolute; top:0; left:0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); z-index: 1;
+        }
+
+        .cover-content { position: relative; z-index: 2; }
+        .cover-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 10px; }
+        .cover-author { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.9; }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 6, 23, 0.95); display: none;
+            justify-content: center; align-items: center; z-index: 3000;
+        }
+        .modal-content {
+            background: #1e293b; padding: 40px; border-radius: 28px;
+            width: 90%; max-width: 420px; border: 1px solid var(--primary);
+        }
+        input, select {
+            width: 100%; padding: 14px; margin: 10px 0;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; color: white; outline: none;
+        }
+        label { font-size: 0.8rem; color: var(--primary); margin-left: 5px; }
+    </style>
+</head>
+<body>
+
+    <div id="universe">
+        <div class="aurora-layer"></div>
+        <div class="shooting-star" style="left: 15%; animation-delay: 1s;"></div>
+        <div class="shooting-star" style="left: 50%; animation-delay: 3s;"></div>
+        <div class="shooting-star" style="left: 85%; animation-delay: 5s;"></div>
+    <div style="position: absolute; background: white; border-radius: 50%; height: 2.09663px; width: 2.09663px; left: 3.63401%; top: 16.6345%; opacity: 0.428887;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.283px; width: 2.283px; left: 47.9688%; top: 91.7844%; opacity: 0.898035;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.52279px; width: 1.52279px; left: 57.4115%; top: 63.1466%; opacity: 0.607385;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.548px; width: 1.548px; left: 40.4836%; top: 36.0322%; opacity: 0.698193;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.50735px; width: 2.50735px; left: 72.6803%; top: 42.5537%; opacity: 0.779157;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.07993px; width: 1.07993px; left: 59.4477%; top: 45.9073%; opacity: 0.51694;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.83825px; width: 1.83825px; left: 33.7519%; top: 79.4695%; opacity: 0.882246;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.13582px; width: 1.13582px; left: 63.673%; top: 96.3497%; opacity: 0.084563;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.22008px; width: 1.22008px; left: 6.87091%; top: 31.8042%; opacity: 0.612598;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.94474px; width: 1.94474px; left: 53.7446%; top: 55.7352%; opacity: 0.625122;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.72903px; width: 1.72903px; left: 77.2123%; top: 51.7894%; opacity: 0.631946;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.92567px; width: 1.92567px; left: 98.8307%; top: 67.747%; opacity: 0.987009;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.1838px; width: 2.1838px; left: 63.2888%; top: 83.7191%; opacity: 0.882675;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.60896px; width: 2.60896px; left: 97.4649%; top: 48.4246%; opacity: 0.146513;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.55259px; width: 2.55259px; left: 42.9323%; top: 83.3959%; opacity: 0.613228;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.10896px; width: 1.10896px; left: 26.7746%; top: 98.0009%; opacity: 0.536066;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.26798px; width: 1.26798px; left: 29.6447%; top: 26.0194%; opacity: 0.361953;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.36421px; width: 1.36421px; left: 17.0305%; top: 5.19004%; opacity: 0.982803;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.47373px; width: 1.47373px; left: 45.912%; top: 96.649%; opacity: 0.695142;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.89455px; width: 1.89455px; left: 28.1697%; top: 72.4459%; opacity: 0.759893;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.34346px; width: 2.34346px; left: 88.9947%; top: 68.807%; opacity: 0.0813615;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.50064px; width: 1.50064px; left: 11.1505%; top: 95.3068%; opacity: 0.121293;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.89648px; width: 1.89648px; left: 0.0857741%; top: 18.8439%; opacity: 0.229483;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.48069px; width: 1.48069px; left: 4.66115%; top: 81.3781%; opacity: 0.408952;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.35241px; width: 1.35241px; left: 48.2761%; top: 45.3805%; opacity: 0.543389;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.28365px; width: 1.28365px; left: 73.7726%; top: 13.4011%; opacity: 0.0842002;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.44115px; width: 2.44115px; left: 16.3963%; top: 31.7235%; opacity: 0.980652;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.64864px; width: 2.64864px; left: 68.5061%; top: 0.652303%; opacity: 0.390122;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.55029px; width: 2.55029px; left: 9.39425%; top: 26.5954%; opacity: 0.923688;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.31057px; width: 1.31057px; left: 26.2919%; top: 60.0795%; opacity: 0.849616;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.13803px; width: 2.13803px; left: 81.132%; top: 44.103%; opacity: 0.933463;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.42599px; width: 2.42599px; left: 55.2641%; top: 68.5711%; opacity: 0.570987;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.04165px; width: 2.04165px; left: 73.9311%; top: 49.3865%; opacity: 0.466807;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.0155px; width: 2.0155px; left: 94.0598%; top: 42.7248%; opacity: 0.877681;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.45674px; width: 1.45674px; left: 97.585%; top: 52.2885%; opacity: 0.742045;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.58055px; width: 2.58055px; left: 94.458%; top: 75.0681%; opacity: 0.707174;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.23439px; width: 1.23439px; left: 21.0477%; top: 8.91058%; opacity: 0.940209;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.76946px; width: 1.76946px; left: 70.7801%; top: 42.8985%; opacity: 0.946328;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.55718px; width: 2.55718px; left: 60.7389%; top: 37.3672%; opacity: 0.357491;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.04862px; width: 1.04862px; left: 9.01607%; top: 49.7709%; opacity: 0.0508744;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.4539px; width: 2.4539px; left: 62.6806%; top: 67.1684%; opacity: 0.65192;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.902px; width: 1.902px; left: 38.175%; top: 45.8486%; opacity: 0.737169;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.58361px; width: 1.58361px; left: 65.4008%; top: 16.2058%; opacity: 0.127923;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.03158px; width: 2.03158px; left: 5.2262%; top: 72.7898%; opacity: 0.662084;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.25101px; width: 1.25101px; left: 28.9999%; top: 6.70465%; opacity: 0.330858;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.90746px; width: 2.90746px; left: 88.1138%; top: 99.0727%; opacity: 0.364801;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.85894px; width: 2.85894px; left: 96.0685%; top: 60.8653%; opacity: 0.504402;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.57182px; width: 1.57182px; left: 90.5464%; top: 26.4189%; opacity: 0.864216;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.87264px; width: 1.87264px; left: 52.1271%; top: 98.8732%; opacity: 0.0233866;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.95045px; width: 1.95045px; left: 69.3046%; top: 66.8819%; opacity: 0.280217;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.95436px; width: 2.95436px; left: 25.2899%; top: 94.6145%; opacity: 0.569368;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.21073px; width: 1.21073px; left: 96.9508%; top: 71.7251%; opacity: 0.525182;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.11989px; width: 1.11989px; left: 21.9462%; top: 23.8217%; opacity: 0.969625;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.45657px; width: 2.45657px; left: 8.71547%; top: 22.0661%; opacity: 0.622088;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.87798px; width: 2.87798px; left: 16.4387%; top: 25.23%; opacity: 0.199287;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.94046px; width: 2.94046px; left: 85.4302%; top: 47.8554%; opacity: 0.603892;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.94191px; width: 1.94191px; left: 57.1028%; top: 61.1644%; opacity: 0.937746;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.67819px; width: 2.67819px; left: 27.6856%; top: 65.2535%; opacity: 0.0883501;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.55938px; width: 2.55938px; left: 43.3143%; top: 98.2954%; opacity: 0.925038;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.82738px; width: 2.82738px; left: 96.1438%; top: 22.2461%; opacity: 0.52694;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.32068px; width: 2.32068px; left: 23.9494%; top: 34.0379%; opacity: 0.374012;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.48414px; width: 1.48414px; left: 43.8254%; top: 1.78715%; opacity: 0.652423;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.23665px; width: 2.23665px; left: 98.1474%; top: 39.437%; opacity: 0.361454;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.47269px; width: 1.47269px; left: 9.74739%; top: 38.5482%; opacity: 0.806598;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.26691px; width: 1.26691px; left: 21.8811%; top: 90.3164%; opacity: 0.334658;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.93274px; width: 1.93274px; left: 85.1478%; top: 35.7994%; opacity: 0.165;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.27618px; width: 1.27618px; left: 81.5172%; top: 28.4452%; opacity: 0.887461;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.144px; width: 2.144px; left: 57.4271%; top: 72.0568%; opacity: 0.465095;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.79364px; width: 2.79364px; left: 3.8029%; top: 10.4958%; opacity: 0.434375;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.09771px; width: 1.09771px; left: 71.7634%; top: 51.221%; opacity: 0.24591;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.42501px; width: 1.42501px; left: 74.3768%; top: 53.2748%; opacity: 0.637317;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.12182px; width: 2.12182px; left: 35.8225%; top: 91.3428%; opacity: 0.171602;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.3744px; width: 2.3744px; left: 18.9139%; top: 33.8447%; opacity: 0.524581;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.44035px; width: 1.44035px; left: 43.1182%; top: 14.8421%; opacity: 0.331641;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.88607px; width: 2.88607px; left: 35.2655%; top: 64.3707%; opacity: 0.371515;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.8939px; width: 1.8939px; left: 36.5662%; top: 78.6112%; opacity: 0.702688;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.2106px; width: 2.2106px; left: 48.4324%; top: 86.0886%; opacity: 0.733748;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.08506px; width: 2.08506px; left: 53.9662%; top: 56.9848%; opacity: 0.369543;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.08582px; width: 2.08582px; left: 33.8237%; top: 0.166742%; opacity: 0.881542;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.28101px; width: 1.28101px; left: 67.3598%; top: 9.50188%; opacity: 0.0108769;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.38416px; width: 2.38416px; left: 64.9677%; top: 22.7478%; opacity: 0.027299;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.59678px; width: 2.59678px; left: 99.6549%; top: 28.5612%; opacity: 0.0430118;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.97428px; width: 2.97428px; left: 80.3481%; top: 86.0288%; opacity: 0.668457;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.3165px; width: 2.3165px; left: 41.3289%; top: 86.1558%; opacity: 0.0700907;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.87058px; width: 1.87058px; left: 37.2343%; top: 40.888%; opacity: 0.786928;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.92612px; width: 1.92612px; left: 99.0166%; top: 49.8459%; opacity: 0.19109;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.18437px; width: 1.18437px; left: 41.8209%; top: 74.0857%; opacity: 0.155582;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.23194px; width: 2.23194px; left: 79.1513%; top: 82.1595%; opacity: 0.172583;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.34731px; width: 1.34731px; left: 7.49766%; top: 78.2236%; opacity: 0.766046;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.37257px; width: 2.37257px; left: 12.218%; top: 10.8367%; opacity: 0.795665;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.0283px; width: 2.0283px; left: 15.4876%; top: 89.6988%; opacity: 0.0505646;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.99597px; width: 2.99597px; left: 90.5886%; top: 65.7626%; opacity: 0.0533896;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.64935px; width: 2.64935px; left: 92.514%; top: 81.9082%; opacity: 0.317442;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.72316px; width: 2.72316px; left: 51.4161%; top: 80.8962%; opacity: 0.773361;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.419px; width: 2.419px; left: 62.9127%; top: 49.5206%; opacity: 0.410188;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.95961px; width: 1.95961px; left: 63.3805%; top: 2.59416%; opacity: 0.436877;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.15034px; width: 2.15034px; left: 24.3657%; top: 13.4339%; opacity: 0.466923;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.90554px; width: 1.90554px; left: 96.8978%; top: 82.0088%; opacity: 0.618092;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.45594px; width: 1.45594px; left: 24.1033%; top: 28.9246%; opacity: 0.530102;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.72497px; width: 2.72497px; left: 95.6234%; top: 68.1527%; opacity: 0.274354;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.50455px; width: 2.50455px; left: 3.71069%; top: 37.4168%; opacity: 0.887323;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.86232px; width: 1.86232px; left: 73.1833%; top: 59.1734%; opacity: 0.940205;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.30522px; width: 2.30522px; left: 66.5252%; top: 33.2752%; opacity: 0.438903;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.60297px; width: 1.60297px; left: 65.495%; top: 38.0992%; opacity: 0.788727;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.20788px; width: 2.20788px; left: 90.9712%; top: 11.5501%; opacity: 0.290376;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.06391px; width: 1.06391px; left: 87.2484%; top: 68.4838%; opacity: 0.581442;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.22925px; width: 2.22925px; left: 63.9227%; top: 72.6309%; opacity: 0.951911;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.99366px; width: 1.99366px; left: 27.2335%; top: 30.2917%; opacity: 0.514857;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.42818px; width: 2.42818px; left: 40.5335%; top: 67.1635%; opacity: 0.760507;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.37696px; width: 1.37696px; left: 52.9969%; top: 7.31833%; opacity: 0.148436;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.46162px; width: 2.46162px; left: 57.2085%; top: 93.1592%; opacity: 0.496222;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.71645px; width: 1.71645px; left: 7.03702%; top: 64.8511%; opacity: 0.458097;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.96062px; width: 2.96062px; left: 27.0577%; top: 48.624%; opacity: 0.968973;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.5134px; width: 2.5134px; left: 17.8807%; top: 60.5461%; opacity: 0.288778;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.64935px; width: 1.64935px; left: 63.0167%; top: 7.88604%; opacity: 0.35675;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.47366px; width: 2.47366px; left: 76.3752%; top: 30.6665%; opacity: 0.0258343;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.2824px; width: 1.2824px; left: 68.2234%; top: 96.3846%; opacity: 0.971322;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.77859px; width: 2.77859px; left: 32.7223%; top: 74.9151%; opacity: 0.258331;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 2.70025px; width: 2.70025px; left: 17.3378%; top: 72.3594%; opacity: 0.603544;"></div><div style="position: absolute; background: white; border-radius: 50%; height: 1.20192px; width: 1.20192px; left: 45.2123%; top: 11.4011%; opacity: 0.564487;"></div></div>
+
+    <!-- LANDING PAGE -->
+    <div id="landingPage">
+        <div class="welcome-card">
+            <div class="profile-frame">
+                <img src="./Aurora Sky Library_files/dest pic.jpeg" alt="Librarian">
+            </div>
+            <div class="welcome-info">
+                <p style="color: var(--primary); font-weight: 800; letter-spacing: 4px; margin-bottom: 8px; font-size: 0.8rem;">VIRTUAL ARCHIVE 2026</p>
+                <h1>Aurora Sky Library</h1>
+                <p style="margin-bottom: 35px; opacity: 0.7; font-size: 1.1rem; line-height: 1.5;">Kelola koleksi buku Anda dengan atmosfer langit malam yang tak terbatas.</p>
+                <button class="glass-btn" style="padding: 18px 40px; font-size: 1.1rem;" onclick="masuk()">Buka Katalog</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div class="container" id="mainApp">
+        <header style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px;">
+            <div>
+                <h2 style="font-family: &#39;Playfair Display&#39;; font-size: 2.5rem;">Katalog Utama</h2>
+                <p style="opacity: 0.5;">Arsip digital di bawah cahaya Aurora</p>
+            </div>
+            <button class="glass-btn" onclick="bukaModal()">+ Tambah Koleksi</button>
+        </header>
+
+        <div class="book-grid" id="bookGrid">
+            <!-- Contoh Buku -->
+            <div class="book-card">
+                <div class="auto-cover" style="background: linear-gradient(135deg, #312e81, #581c87);">
+                    <div class="cover-overlay"></div>
+                    <div class="cover-content">
+                        <div class="cover-title">Contoh Buku</div>
+                        <div class="cover-author">Penulis Aurora</div>
+                    </div>
+                </div>
+                <h3 style="font-size: 1rem; margin-bottom: 5px;">Contoh Buku</h3>
+                <p style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 15px;">Fiksi</p>
+                <button class="glass-btn" style="width: 100%; padding: 10px; font-size: 0.75rem; background: rgba(255,255,255,0.05);" onclick="editBuku(this)">Sunting</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="bookModal">
+        <div class="modal-content">
+            <h2 id="modalTitle" style="font-family: &#39;Playfair Display&#39;; margin-bottom: 15px;">Entri Koleksi</h2>
+            <input type="text" id="inJudul" placeholder="Judul Buku">
+            <input type="text" id="inPenulis" placeholder="Nama Penulis">
+            <input type="text" id="inKategori" placeholder="Kategori">
+            
+            <label>Upload Cover (Opsional):</label>
+            <input type="file" id="inFile" accept="image/*">
+            
+            <label>Atau Pilih Tema Warna:</label>
+            <select id="inWarna">
+                <option value="linear-gradient(135deg, #1e3a8a, #581c87)">Midnight Nebula</option>
+                <option value="linear-gradient(135deg, #064e3b, #115e59)">Deep Aurora</option>
+                <option value="linear-gradient(135deg, #831843, #4c1d95)">Stellar Bloom</option>
+            </select>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="glass-btn" style="flex: 2;" onclick="simpanBuku()">Simpan</button>
+                <button class="glass-btn" style="flex: 1; background: #334155;" onclick="tutupModal()">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GENERATE STARS
+        const universe = document.getElementById('universe');
+        for (let i = 0; i < 120; i++) {
+            const star = document.createElement('div');
+            star.style.position = 'absolute'; star.style.background = 'white';
+            star.style.borderRadius = '50%';
+            const size = Math.random() * 2 + 1 + 'px';
+            star.style.width = star.style.height = size;
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.opacity = Math.random();
+            star.animate([{ opacity: 0.2 }, { opacity: 1 }, { opacity: 0.2 }], {
+                duration: 2000 + Math.random() * 3000,
+                iterations: Infinity
+            });
+            universe.appendChild(star);
+        }
+
+        function masuk() {
+            document.getElementById('landingPage').classList.add('hidden');
+            setTimeout(() => { document.getElementById('mainApp').classList.add('active'); }, 600);
+        }
+
+        let targetEdit = null;
+        function bukaModal() { 
+            targetEdit = null; 
+            document.getElementById('inJudul').value = '';
+            document.getElementById('inPenulis').value = '';
+            document.getElementById('inKategori').value = '';
+            document.getElementById('inFile').value = '';
+            document.getElementById('bookModal').style.display = 'flex'; 
+        }
+        function tutupModal() { document.getElementById('bookModal').style.display = 'none'; }
+
+        // --- UPDATE: Logika Simpan dengan Cover ---
+        function simpanBuku() {
+            const j = document.getElementById('inJudul').value;
+            const p = document.getElementById('inPenulis').value;
+            const k = document.getElementById('inKategori').value;
+            const w = document.getElementById('inWarna').value;
+            const fileInput = document.getElementById('inFile');
+            
+            if (!j || !p) { alert("Judul dan Penulis harus diisi!"); return; }
+
+            const renderCard = (imgUrl) => {
+                const bgStyle = imgUrl ? `url(${imgUrl})` : w;
+                const overlay = imgUrl ? '<div class="cover-overlay"></div>' : '';
+
+                if (targetEdit) {
+                    const card = targetEdit.parentElement;
+                    card.querySelector('.auto-cover').style.background = bgStyle;
+                    card.querySelector('.auto-cover').innerHTML = `${overlay}<div class="cover-content"><div class="cover-title">${j}</div><div class="cover-author">${p}</div></div>`;
+                    card.querySelector('h3').innerText = j;
+                    card.querySelector('p').innerText = k;
+                } else {
+                    const grid = document.getElementById('bookGrid');
+                    const div = document.createElement('div');
+                    div.className = 'book-card';
+                    div.innerHTML = `
+                        <div class="auto-cover" style="background: ${bgStyle};">
+                            ${overlay}
+                            <div class="cover-content">
+                                <div class="cover-title">${j}</div>
+                                <div class="cover-author">${p}</div>
+                            </div>
+                        </div>
+                        <h3>${j}</h3>
+                        <p style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 15px;">${k}</p>
+                        <button class="glass-btn" style="width: 100%; padding: 10px; font-size: 0.75rem; background: rgba(255,255,255,0.05);" onclick="editBuku(this)">Sunting</button>
+                    `;
+                    grid.appendChild(div);
+                }
+                tutupModal();
+            };
+
+            // Cek apakah ada file yang diupload
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => renderCard(e.target.result);
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                renderCard(null);
+            }
+        }
+
+        function editBuku(btn) {
+            targetEdit = btn;
+            const card = btn.parentElement;
+            document.getElementById('inJudul').value = card.querySelector('h3').innerText;
+            document.getElementById('inPenulis').value = card.querySelector('.cover-author').innerText;
+            document.getElementById('inKategori').value = card.querySelector('p').innerText;
+            document.getElementById('bookModal').style.display = 'flex';
+        }
+    </script>
+
+</body></html>
