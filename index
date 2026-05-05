@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Sky Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #818cf8;
+            --secondary: #c084fc;
+            --aurora-teal: rgba(45, 212, 191, 0.3);
+            --aurora-purple: rgba(139, 92, 246, 0.3);
+            --bg-space: #0f172a;
+            --text-main: #f1f5f9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            background: var(--bg-space);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND ANIMASI --- */
+        #universe {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; background: radial-gradient(ellipse at bottom, #1e293b 0%, #020617 100%);
+            overflow: hidden;
+        }
+
+        .aurora-layer {
+            position: absolute; width: 200%; height: 100%;
+            top: -10%; left: -50%;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0%,
+                var(--aurora-teal) 15%,
+                transparent 30%,
+                var(--aurora-purple) 45%,
+                transparent 60%
+            );
+            filter: blur(100px);
+            opacity: 0.5;
+            animation: auroraFlow 20s infinite linear;
+        }
+
+        @keyframes auroraFlow {
+            from { transform: translateX(-20%) skewX(-10deg); }
+            to { transform: translateX(0%) skewX(10deg); }
+        }
+
+        .shooting-star {
+            position: absolute; top: -10px;
+            width: 2px; height: 100px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), #fff);
+            opacity: 0; animation: shoot 5s infinite;
+        }
+
+        @keyframes shoot {
+            0% { transform: translateY(0) translateX(0) rotate(-45deg); opacity: 0; }
+            10% { opacity: 1; }
+            30% { transform: translateY(800px) translateX(800px) rotate(-45deg); opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        /* --- LANDING PAGE --- */
+        #landingPage {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(15px); transition: 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        #landingPage.hidden { transform: translateY(-100%); opacity: 0; }
+
+        .welcome-card {
+            display: flex; align-items: center; gap: 40px;
+            max-width: 900px; padding: 40px;
+        }
+
+        .profile-frame {
+            position: relative;
+            animation: floatProfile 6s infinite ease-in-out;
+            flex-shrink: 0;
+        }
+
+        @keyframes floatProfile {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1.5deg); }
+        }
+
+        .profile-frame img {
+            width: 260px;
+            height: 360px;
+            object-fit: cover;
+            border-radius: 40px 15px; 
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 40px rgba(129, 140, 248, 0.3);
+        }
+
+        .welcome-info h1 {
+            font-family: 'Playfair Display', serif; font-size: 3.5rem;
+            line-height: 1.1; margin-bottom: 20px;
+            background: linear-gradient(to bottom right, #fff, var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* --- MAIN SYSTEM --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 80px 20px; display: none; }
+        .container.active { display: block; animation: slideUp 1s cubic-bezier(0.2, 1, 0.3, 1); }
+
+        .glass-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 14px 28px; border-radius: 12px;
+            cursor: pointer; font-weight: 700; transition: 0.4s;
+            box-shadow: 0 10px 20px rgba(129, 140, 248, 0.25);
+        }
+        .glass-btn:hover { transform: scale(1.05) translateY(-2px); }
+
+        /* --- BOOK CARDS --- */
+        .book-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 30px; margin-top: 40px;
+        }
+
+        .book-card {
+            background: rgba(255, 255, 255, 0.03); border-radius: 24px; padding: 20px;
+            border: 1px solid rgba(255,255,255,0.08); transition: 0.5s;
+            backdrop-filter: blur(10px); text-align: center;
+        }
+        .book-card:hover { transform: translateY(-15px); border-color: var(--primary); }
+
+        .auto-cover {
+            width: 100%; height: 280px; border-radius: 16px;
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 20px; margin-bottom: 15px; color: white;
+            position: relative; overflow: hidden;
+            background-size: cover !important;
+            background-position: center !important;
+            transition: 0.3s;
+        }
+
+        .cover-overlay {
+            position: absolute; top:0; left:0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); z-index: 1;
+        }
+
+        .cover-content { position: relative; z-index: 2; }
+        .cover-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 10px; }
+        .cover-author { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.9; }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 6, 23, 0.95); display: none;
+            justify-content: center; align-items: center; z-index: 3000;
+        }
+        .modal-content {
+            background: #1e293b; padding: 40px; border-radius: 28px;
+            width: 90%; max-width: 420px; border: 1px solid var(--primary);
+        }
+        input, select {
+            width: 100%; padding: 14px; margin: 10px 0;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; color: white; outline: none;
+        }
+        label { font-size: 0.8rem; color: var(--primary); margin-left: 5px; }
+    </style>
+</head>
+<body>
+
+    <div id="universe">
+        <div class="aurora-layer"></div>
+        <div class="shooting-star" style="left: 15%; animation-delay: 1s;"></div>
+        <div class="shooting-star" style="left: 50%; animation-delay: 3s;"></div>
+        <div class="shooting-star" style="left: 85%; animation-delay: 5s;"></div>
+    </div>
+
+    <!-- LANDING PAGE -->
+    <div id="landingPage">
+        <div class="welcome-card">
+            <div class="profile-frame">
+                <!-- Gunakan path gambar asli kamu di sini -->
+                <img src="c:\Users\USER\Pictures\foto ety\dest pic.jpeg" alt="Librarian">
+            </div>
+            <div class="welcome-info">
+                <p style="color: var(--primary); font-weight: 800; letter-spacing: 4px; margin-bottom: 8px; font-size: 0.8rem;">VIRTUAL ARCHIVE 2026</p>
+                <h1>Aurora Sky Library</h1>
+                <p style="margin-bottom: 35px; opacity: 0.7; font-size: 1.1rem; line-height: 1.5;">Kelola koleksi buku Anda dengan atmosfer langit malam yang tak terbatas.</p>
+                <button class="glass-btn" style="padding: 18px 40px; font-size: 1.1rem;" onclick="masuk()">Buka Katalog</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div class="container" id="mainApp">
+        <header style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px;">
+            <div>
+                <h2 style="font-family: 'Playfair Display'; font-size: 2.5rem;">Katalog Utama</h2>
+                <p style="opacity: 0.5;">Arsip digital di bawah cahaya Aurora</p>
+            </div>
+            <button class="glass-btn" onclick="bukaModal()">+ Tambah Koleksi</button>
+        </header>
+
+        <div class="book-grid" id="bookGrid">
+            <!-- Koleksi buku akan muncul di sini secara otomatis dari LocalStorage -->
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="bookModal">
+        <div class="modal-content">
+            <h2 id="modalTitle" style="font-family: 'Playfair Display'; margin-bottom: 15px;">Entri Koleksi</h2>
+            <input type="text" id="inJudul" placeholder="Judul Buku">
+            <input type="text" id="inPenulis" placeholder="Nama Penulis">
+            <input type="text" id="inKategori" placeholder="Kategori">
+            
+            <label>Upload Cover (Opsional):</label>
+            <input type="file" id="inFile" accept="image/*">
+            
+            <label>Atau Pilih Tema Warna:</label>
+            <select id="inWarna">
+                <option value="linear-gradient(135deg, #1e3a8a, #581c87)">Midnight Nebula</option>
+                <option value="linear-gradient(135deg, #064e3b, #115e59)">Deep Aurora</option>
+                <option value="linear-gradient(135deg, #831843, #4c1d95)">Stellar Bloom</option>
+            </select>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="glass-btn" style="flex: 2;" onclick="simpanBuku()">Simpan</button>
+                <button class="glass-btn" style="flex: 1; background: #334155;" onclick="tutupModal()">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inisialisasi Data dari LocalStorage
+        let libraryData = JSON.parse(localStorage.getItem('aurora_library_db')) || [];
+        let targetEditId = null;
+
+        // GENERATE STARS
+        const universe = document.getElementById('universe');
+        for (let i = 0; i < 120; i++) {
+            const star = document.createElement('div');
+            star.style.position = 'absolute'; star.style.background = 'white';
+            star.style.borderRadius = '50%';
+            const size = Math.random() * 2 + 1 + 'px';
+            star.style.width = star.style.height = size;
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.opacity = Math.random();
+            star.animate([{ opacity: 0.2 }, { opacity: 1 }, { opacity: 0.2 }], {
+                duration: 2000 + Math.random() * 3000,
+                iterations: Infinity
+            });
+            universe.appendChild(star);
+        }
+
+        function masuk() {
+            document.getElementById('landingPage').classList.add('hidden');
+            setTimeout(() => { 
+                document.getElementById('mainApp').classList.add('active');
+                renderLibrary();
+            }, 600);
+        }
+
+        function bukaModal() { 
+            targetEditId = null;
+            document.getElementById('modalTitle').innerText = "Entri Koleksi";
+            document.getElementById('inJudul').value = '';
+            document.getElementById('inPenulis').value = '';
+            document.getElementById('inKategori').value = '';
+            document.getElementById('inFile').value = '';
+            document.getElementById('bookModal').style.display = 'flex'; 
+        }
+
+        function tutupModal() { document.getElementById('bookModal').style.display = 'none'; }
+
+        // FUNGSI UTAMA: Render tampilan dari data
+        function renderLibrary() {
+            const grid = document.getElementById('bookGrid');
+            grid.innerHTML = '';
+
+            libraryData.forEach((buku) => {
+                const bgStyle = buku.cover ? `url(${buku.cover})` : buku.warna;
+                const overlay = buku.cover ? '<div class="cover-overlay"></div>' : '';
+
+                const div = document.createElement('div');
+                div.className = 'book-card';
+                div.innerHTML = `
+                    <div class="auto-cover" style="background: ${bgStyle};">
+                        ${overlay}
+                        <div class="cover-content">
+                            <div class="cover-title">${buku.judul}</div>
+                            <div class="cover-author">${buku.penulis}</div>
+                        </div>
+                    </div>
+                    <h3>${buku.judul}</h3>
+                    <p style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 15px;">${buku.kategori}</p>
+                    <div style="display:flex; gap:5px;">
+                        <button class="glass-btn" style="flex:1; padding: 10px; font-size: 0.75rem; background: rgba(255,255,255,0.05);" onclick="editBuku('${buku.id}')">Sunting</button>
+                        <button class="glass-btn" style="padding: 10px; font-size: 0.75rem; background: rgba(239, 68, 68, 0.2);" onclick="hapusBuku('${buku.id}')">✕</button>
+                    </div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function simpanBuku() {
+            const judul = document.getElementById('inJudul').value;
+            const penulis = document.getElementById('inPenulis').value;
+            const kategori = document.getElementById('inKategori').value;
+            const warna = document.getElementById('inWarna').value;
+            const fileInput = document.getElementById('inFile');
+
+            if (!judul || !penulis) { alert("Judul dan Penulis wajib diisi!"); return; }
+
+            const finalizeSave = (imgBase64) => {
+                if (targetEditId) {
+                    // Update data lama
+                    const index = libraryData.findIndex(b => b.id === targetEditId);
+                    libraryData[index] = {
+                        ...libraryData[index],
+                        judul, penulis, kategori, warna,
+                        cover: imgBase64 || libraryData[index].cover
+                    };
+                } else {
+                    // Tambah data baru
+                    const bukuBaru = {
+                        id: Date.now().toString(),
+                        judul, penulis, kategori, warna,
+                        cover: imgBase64
+                    };
+                    libraryData.push(bukuBaru);
+                }
+
+                // SIMPAN KE LOCALSTORAGE
+                localStorage.setItem('aurora_library_db', JSON.stringify(libraryData));
+                renderLibrary();
+                tutupModal();
+            };
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => finalizeSave(e.target.result);
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                finalizeSave(null);
+            }
+        }
+
+        function editBuku(id) {
+            const buku = libraryData.find(b => b.id === id);
+            if (!buku) return;
+
+            targetEditId = id;
+            document.getElementById('modalTitle').innerText = "Sunting Koleksi";
+            document.getElementById('inJudul').value = buku.judul;
+            document.getElementById('inPenulis').value = buku.penulis;
+            document.getElementById('inKategori').value = buku.kategori;
+            document.getElementById('bookModal').style.display = 'flex';
+        }
+
+        function hapusBuku(id) {
+            if (confirm("Hapus buku ini dari arsip digital?")) {
+                libraryData = libraryData.filter(b => b.id !== id);
+                localStorage.setItem('aurora_library_db', JSON.stringify(libraryData));
+                renderLibrary();
+            }
+        }
+    </script>
+</body>
+</html>
