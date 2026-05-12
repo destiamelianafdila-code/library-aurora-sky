@@ -1,9 +1,9 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aurora Sky Library</title>
+    <title>Aurora Sky Library | Virtual Archive</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     
     <style>
@@ -26,220 +26,272 @@
             overflow-x: hidden;
         }
 
-        /* --- AURORA BACKGROUND --- */
+        /* --- BACKGROUND ANIMATION --- */
         #universe {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; background: radial-gradient(ellipse at bottom, #1e293b 0%, #020617 100%);
-            overflow: hidden;
         }
 
-        .aurora-layer {
-            position: absolute; width: 200%; height: 100%;
-            top: -10%; left: -50%;
-            background: repeating-linear-gradient(
-                90deg,
-                transparent 0%,
-                var(--aurora-teal) 15%,
-                transparent 30%,
-                var(--aurora-purple) 45%,
-                transparent 60%
-            );
-            filter: blur(100px);
-            opacity: 0.5;
-            animation: auroraFlow 20s infinite linear;
+        .aurora {
+            position: absolute; width: 200%; height: 100%; top: -10%; left: -50%;
+            background: repeating-linear-gradient(90deg, transparent 0%, var(--aurora-teal) 15%, transparent 30%, var(--aurora-purple) 45%, transparent 60%);
+            filter: blur(100px); opacity: 0.5; animation: auroraFlow 20s infinite linear;
         }
 
-        @keyframes auroraFlow {
-            from { transform: translateX(-20%) skewX(-10deg); }
-            to { transform: translateX(0%) skewX(10deg); }
-        }
+        @keyframes auroraFlow { from { transform: translateX(-20%); } to { transform: translateX(0%); } }
 
-        /* --- LANDING PAGE (Tanpa Foto) --- */
+        /* --- LANDING PAGE --- */
         #landingPage {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center;
-            z-index: 2000; background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(15px); transition: 1.2s cubic-bezier(0.7, 0, 0.3, 1);
-            text-align: center;
+            position: fixed; inset: 0; display: flex; justify-content: center; align-items: center;
+            z-index: 2000; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
+            transition: 1s cubic-bezier(0.7, 0, 0.3, 1); text-align: center;
         }
-
-        #landingPage.hidden { transform: translateY(-100%); opacity: 0; }
-
-        .welcome-card {
-            max-width: 700px; padding: 40px;
-        }
+        #landingPage.hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
 
         .welcome-card h1 {
-            font-family: 'Playfair Display', serif; font-size: 4rem;
-            line-height: 1.1; margin-bottom: 20px;
+            font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 15px;
             background: linear-gradient(to bottom right, #fff, var(--secondary));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .welcome-card p {
-            font-size: 1.2rem; opacity: 0.8; margin-bottom: 40px;
-            letter-spacing: 1px;
-        }
-
-        /* --- MAIN SYSTEM --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 80px 20px; display: none; }
-        .container.active { display: block; animation: fadeIn 1s ease; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- MAIN CONTENT --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; display: none; opacity: 0; transition: 0.5s; }
+        .container.active { display: block; opacity: 1; }
 
         .glass-btn {
             background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white; border: none; padding: 16px 36px; border-radius: 12px;
-            cursor: pointer; font-weight: 700; transition: 0.4s; font-size: 1rem;
+            color: white; border: none; padding: 12px 28px; border-radius: 10px;
+            cursor: pointer; font-weight: 700; transition: 0.3s;
         }
-        .glass-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(129, 140, 248, 0.4); }
+        .glass-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(129, 140, 248, 0.5); }
 
         /* --- BOOK CARDS --- */
-        .book-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 30px; margin-top: 40px;
-        }
-
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 30px; margin-top: 40px; }
+        
         .book-card {
-            background: rgba(255, 255, 255, 0.05); border-radius: 24px; padding: 20px;
-            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);
-            text-align: center; transition: 0.5s;
+            background: rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 15px;
+            border: 1px solid rgba(255,255,255,0.1); text-align: center; transition: 0.4s;
+            backdrop-filter: blur(10px);
         }
-        .book-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .book-card:hover { border-color: var(--primary); transform: translateY(-10px); background: rgba(255, 255, 255, 0.08); }
 
-        .auto-cover {
-            width: 100%; height: 280px; border-radius: 16px; margin-bottom: 15px;
-            display: flex; flex-direction: column; justify-content: center; padding: 20px;
-            color: white; position: relative; overflow: hidden;
-            background-size: cover !important; background-position: center !important;
+        .cover-wrapper {
+            width: 100%; height: 280px; border-radius: 14px; overflow: hidden; margin-bottom: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4); background: #1e293b; position: relative;
         }
 
-        .cover-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+        .cover-image { width: 100%; height: 100%; object-fit: cover; }
+        
+        .auto-cover-placeholder {
+            width: 100%; height: 100%; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; padding: 15px; text-align: center;
+        }
+
+        .actions { display: flex; gap: 8px; justify-content: center; margin-top: 15px; }
+        .btn-small { flex: 1; padding: 8px; font-size: 0.7rem; border-radius: 8px; cursor: pointer; border: none; color: white; font-weight: 600; }
+        .btn-edit { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
+        .btn-delete { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
 
         /* --- MODAL --- */
         .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 6, 23, 0.95); display: none;
-            justify-content: center; align-items: center; z-index: 3000;
+            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.9);
+            display: none; justify-content: center; align-items: center; z-index: 3000;
+            backdrop-filter: blur(10px);
         }
-        .modal-content {
-            background: #1e293b; padding: 40px; border-radius: 28px; width: 90%; max-width: 420px;
+        .modal-content { background: #1e293b; padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; border: 1px solid var(--primary); }
+        
+        input { 
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; 
+            border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; 
         }
-        input { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: none; background: rgba(255,255,255,0.1); color: white; }
+        .file-input-label {
+            display: block; width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px;
+            background: rgba(129, 140, 248, 0.1); border: 1px dashed var(--primary);
+            text-align: center; cursor: pointer; font-size: 0.9rem; color: var(--primary);
+        }
+        label { font-size: 0.75rem; color: var(--primary); font-weight: 600; margin-left: 5px; text-transform: uppercase; }
+        
+        #previewContainer {
+            width: 100px; height: 140px; margin: 10px auto; border-radius: 8px; 
+            overflow: hidden; border: 1px solid rgba(255,255,255,0.2); display: none;
+        }
+        #previewImg { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
 
-    <div id="universe">
-        <div class="aurora-layer"></div>
-    </div>
+    <div id="universe"><div class="aurora"></div></div>
 
-    <!-- LANDING PAGE (WELCOME MESSAGE ONLY) -->
     <div id="landingPage">
         <div class="welcome-card">
-            <p style="color: var(--primary); font-weight: 800; letter-spacing: 5px; text-transform: uppercase;">Virtual Archive</p>
-            <h1>Welcome to <br> Aurora Sky Library</h1>
-            <p>Manage your personal book collection under the infinite light of the stars.</p>
-            <button class="glass-btn" onclick="masuk()">Explore Catalog</button>
+            <p style="letter-spacing: 5px; color: var(--primary); font-weight: 800; text-transform: uppercase;">Celestial Archive</p>
+            <h1>Aurora Sky Library</h1>
+            <p style="margin-bottom: 40px; opacity: 0.7;">Upload and organize your collection locally.</p>
+            <button class="glass-btn" onclick="enterApp()">Open Library</button>
         </div>
     </div>
 
-    <!-- MAIN APP -->
     <div class="container" id="mainApp">
-        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px;">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
             <div>
-                <h2 style="font-family: 'Playfair Display'; font-size: 2.5rem;">Main Catalog</h2>
-                <p style="opacity: 0.5;">Your digital archive under the Aurora</p>
+                <h2 style="font-family: 'Playfair Display'; font-size: 2rem;">Main Catalog</h2>
+                <p style="opacity: 0.6;">Stored in your local browser vault</p>
             </div>
-            <button class="glass-btn" onclick="bukaModal()">+ Add New Book</button>
+            <button class="glass-btn" onclick="openModal()">+ Add Book</button>
         </header>
-
         <div class="book-grid" id="bookGrid"></div>
     </div>
 
     <!-- MODAL -->
     <div id="bookModal" class="modal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 20px;">Book Entry</h2>
+            <h3 id="modalTitle" style="margin-bottom: 15px;">New Book</h3>
+            <input type="hidden" id="editId">
+            
+            <label>Title</label>
             <input type="text" id="inJudul" placeholder="Book Title">
+            
+            <label>Author</label>
             <input type="text" id="inPenulis" placeholder="Author Name">
-            <input type="text" id="inKategori" placeholder="Category (e.g. Fiction)">
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="glass-btn" style="flex: 2;" onclick="simpanBuku()">Save</button>
-                <button class="glass-btn" style="flex: 1; background: #334155;" onclick="tutupModal()">Cancel</button>
+            
+            <label>Category</label>
+            <input type="text" id="inKategori" placeholder="e.g. Novel, History">
+            
+            <label>Book Cover</label>
+            <label for="inCoverFile" class="file-input-label" id="fileLabel">📁 Click to Upload Cover Image</label>
+            <input type="file" id="inCoverFile" accept="image/*" style="display: none;" onchange="handleFileSelect(this)">
+            
+            <div id="previewContainer">
+                <img id="previewImg" src="">
+            </div>
+            
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button class="glass-btn" style="flex: 2;" onclick="saveBook()">Save Archive</button>
+                <button class="glass-btn" style="background: #334155; flex: 1;" onclick="closeModal()">Cancel</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Data Default agar katalog tidak kosong saat pertama dibuka
-        const defaultBooks = [
-            { id: '1', judul: 'Laskar Pelangi', penulis: 'Andrea Hirata', kategori: 'Novel', warna: 'linear-gradient(135deg, #1e3a8a, #581c87)' },
-            { id: '2', judul: 'Bumi', penulis: 'Tere Liye', kategori: 'Fiction', warna: 'linear-gradient(135deg, #064e3b, #115e59)' }
-        ];
+        let libraryData = JSON.parse(localStorage.getItem('aurora_db_v3')) || [];
+        let selectedImageData = ""; // Variable to store base64 image
 
-        let libraryData = JSON.parse(localStorage.getItem('aurora_library_db')) || defaultBooks;
-
-        function masuk() {
+        function enterApp() {
             document.getElementById('landingPage').classList.add('hidden');
-            setTimeout(() => { 
+            setTimeout(() => {
                 document.getElementById('mainApp').classList.add('active');
-                renderLibrary();
+                render();
             }, 600);
         }
 
-        function renderLibrary() {
+        // Fungsi membaca file gambar dan mengubah ke Base64
+        function handleFileSelect(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedImageData = e.target.result;
+                    document.getElementById('previewImg').src = selectedImageData;
+                    document.getElementById('previewContainer').style.display = 'block';
+                    document.getElementById('fileLabel').innerText = "✅ Image Selected";
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function render() {
             const grid = document.getElementById('bookGrid');
             grid.innerHTML = '';
+            
+            if (libraryData.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; opacity: 0.5; padding: 40px;">No books archived yet.</p>`;
+                return;
+            }
 
-            libraryData.forEach((buku) => {
-                const div = document.createElement('div');
-                div.className = 'book-card';
-                div.innerHTML = `
-                    <div class="auto-cover" style="background: ${buku.warna || 'linear-gradient(135deg, #312e81, #4c1d95)'};">
-                        <div class="cover-title">${buku.judul}</div>
-                        <div style="font-size: 0.8rem; opacity: 0.8;">${buku.penulis}</div>
+            libraryData.forEach(book => {
+                const coverContent = book.coverData 
+                    ? `<img src="${book.coverData}" class="cover-image">`
+                    : `<div class="auto-cover-placeholder" style="background: ${book.bg}">
+                        <div style="font-family: 'Playfair Display'; font-weight: bold;">${book.judul}</div>
+                        <div style="font-size: 0.7rem; opacity: 0.8;">${book.penulis}</div>
+                       </div>`;
+
+                grid.innerHTML += `
+                    <div class="book-card">
+                        <div class="cover-wrapper">${coverContent}</div>
+                        <h4 style="font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${book.judul}</h4>
+                        <p style="font-size: 0.75rem; opacity: 0.5;">${book.kategori}</p>
+                        <div class="actions">
+                            <button class="btn-small btn-edit" onclick="editBook('${book.id}')">Edit</button>
+                            <button class="btn-small btn-delete" onclick="deleteBook('${book.id}')">Delete</button>
+                        </div>
                     </div>
-                    <h3 style="margin: 10px 0 5px;">${buku.judul}</h3>
-                    <p style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 15px;">${buku.kategori}</p>
-                    <button class="glass-btn" style="padding: 8px 15px; font-size: 0.7rem; background: rgba(239, 68, 68, 0.2);" onclick="hapusBuku('${buku.id}')">Remove</button>
                 `;
-                grid.appendChild(div);
             });
         }
 
-        function bukaModal() { document.getElementById('bookModal').style.display = 'flex'; }
-        function tutupModal() { document.getElementById('bookModal').style.display = 'none'; }
+        function openModal(id = null) {
+            document.getElementById('bookModal').style.display = 'flex';
+            selectedImageData = ""; // Reset image state
+            document.getElementById('previewContainer').style.display = 'none';
+            document.getElementById('fileLabel').innerText = "📁 Click to Upload Cover Image";
+            
+            if(id) {
+                const book = libraryData.find(b => b.id === id);
+                document.getElementById('modalTitle').innerText = 'Edit Book';
+                document.getElementById('editId').value = id;
+                document.getElementById('inJudul').value = book.judul;
+                document.getElementById('inPenulis').value = book.penulis;
+                document.getElementById('inKategori').value = book.kategori;
+                if(book.coverData) {
+                    selectedImageData = book.coverData;
+                    document.getElementById('previewImg').src = selectedImageData;
+                    document.getElementById('previewContainer').style.display = 'block';
+                }
+            } else {
+                document.getElementById('modalTitle').innerText = 'New Book Entry';
+                document.getElementById('editId').value = '';
+                document.getElementById('inJudul').value = '';
+                document.getElementById('inPenulis').value = '';
+                document.getElementById('inKategori').value = '';
+            }
+        }
 
-        function simpanBuku() {
+        function closeModal() { document.getElementById('bookModal').style.display = 'none'; }
+
+        function saveBook() {
+            const id = document.getElementById('editId').value;
             const judul = document.getElementById('inJudul').value;
             const penulis = document.getElementById('inPenulis').value;
             const kategori = document.getElementById('inKategori').value;
 
-            if (judul && penulis) {
-                const newBook = {
+            if(!judul || !penulis) return alert("Title and Author are required!");
+
+            if(id) {
+                const index = libraryData.findIndex(b => b.id === id);
+                libraryData[index] = { ...libraryData[index], judul, penulis, kategori, coverData: selectedImageData };
+            } else {
+                const grads = ['linear-gradient(135deg, #4338ca, #6366f1)', 'linear-gradient(135deg, #064e3b, #10b981)', 'linear-gradient(135deg, #7c2d12, #f97316)'];
+                libraryData.push({
                     id: Date.now().toString(),
                     judul, penulis, kategori,
-                    warna: 'linear-gradient(135deg, #312e81, #4c1d95)'
-                };
-                libraryData.push(newBook);
-                localStorage.setItem('aurora_library_db', JSON.stringify(libraryData));
-                renderLibrary();
-                tutupModal();
-                // Reset input
-                document.getElementById('inJudul').value = '';
-                document.getElementById('inPenulis').value = '';
-                document.getElementById('inKategori').value = '';
-            } else {
-                alert("Please fill in Title and Author!");
+                    coverData: selectedImageData,
+                    bg: grads[Math.floor(Math.random() * grads.length)]
+                });
             }
+
+            localStorage.setItem('aurora_db_v3', JSON.stringify(libraryData));
+            render();
+            closeModal();
         }
 
-        function hapusBuku(id) {
-            if (confirm("Remove this book from your archive?")) {
+        function editBook(id) { openModal(id); }
+
+        function deleteBook(id) {
+            if(confirm('Delete from archive?')) {
                 libraryData = libraryData.filter(b => b.id !== id);
-                localStorage.setItem('aurora_library_db', JSON.stringify(libraryData));
-                renderLibrary();
+                localStorage.setItem('aurora_db_v3', JSON.stringify(libraryData));
+                render();
             }
         }
     </script>
